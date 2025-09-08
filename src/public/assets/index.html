@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Enviar WhatsApp - Botmaker</title>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie-edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel='stylesheet' href="css/styles.css">
+        <script type="text/javascript" src="js/require.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="js/require.js"></script>
+        <script> var $jq = jQuery.noConflict(); </script>
+        <script type="text/javascript">
+            (function() {
+                var config = {
+                    baseUrl: 'js'
+                };
+                var dependencies = [
+                    'customActivity'
+                ];
+                require(config, dependencies);
+            })();
+        </script>
+    </head>
+    <body>
+        <div class="main-block">
+            <header>
+                <h3>Enviar WhatsApp - Botmaker</h3>
+            </header>
+            <span class="description-span">Envía un mensaje de WhatsApp a un cliente, usando la API de Botmaker.</span>
+            <section id="content">
+                <form action="/">
+                    <fieldset>
+                        <legend>Data Extension</legend>
+                        <input type="text" name="dataExtension" id="dataExtension" placeholder="Nombre de Data Extension"
+                            style="width: 60%;" class="text-input">
+                    </fieldset>
+                    <fieldset>
+                        <legend>Plantilla</legend>
+                        <input type="text" name="templateName" id="templateName" placeholder="Nombre de plantilla"
+                            style="width: 60%;" class="text-input">
+                    </fieldset>
+                    <fieldset id="variables-fieldset">
+                        <legend>Variables</legend>
+                        <button onclick="addItem('', '')">Agregar Variable</button>
+                    </fieldset>
+                </form>
+            </section>
+        </div>
+    </body>
+    <script>
+        let numberOfItems = 0;
+        const addItem = (variableName, dataExtensionColumnName) => {
+            numberOfItems++;
+
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'variable-item';
+            groupDiv.id = 'group-' + String(numberOfItems);
+
+            const input1 = document.createElement('input');
+            input1.type = 'text';
+            input1.name = 'variableName';
+            input1.placeholder = 'Nombre de variable';
+            input1.value = variableName;
+            input1.className = 'text-input';
+            input1.setAttribute('required', '');
+
+            const input2 = document.createElement('input');
+            input2.type = 'text';
+            input2.name = 'dataExtensionColumnName';
+            input2.placeholder = 'Nombre de columna en D.E.';
+            input2.value = dataExtensionColumnName;
+            input2.className = 'text-input';
+            input2.setAttribute('required', '');
+            
+            const button = document.createElement('button');
+            button.innerText = 'X';
+            button.onclick = () => {
+                groupDiv.remove();
+            };
+            
+            groupDiv.appendChild(input1);
+            groupDiv.appendChild(input2);
+            groupDiv.appendChild(button);
+
+            document.getElementById('variables-fieldset').appendChild(groupDiv);
+        }
+    </script>
+</html>
