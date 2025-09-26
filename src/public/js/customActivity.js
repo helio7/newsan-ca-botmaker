@@ -41,13 +41,15 @@ define(['postmonger'], (Postmonger) => {
 
         const variablesArg = inArguments.find(arg => arg.variables);
         if (variablesArg) {
-            const parsedVariables = deserializeString(variablesArg.variables);
-            for (const parsedVariable in parsedVariables) {
-                addItem(
-                    parsedVariable,
-                    parsedVariables[parsedVariable],
-                );
-            }
+            if (variablesArg.variables !== 'NO_VARIABLES') {
+                const parsedVariables = deserializeString(variablesArg.variables);
+                for (const parsedVariable in parsedVariables) {
+                    addItem(
+                        parsedVariable,
+                        parsedVariables[parsedVariable],
+                    );
+                }
+            } 
         }
     });
 
