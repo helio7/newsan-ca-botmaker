@@ -17,6 +17,7 @@
         "execute": {
             "inArguments": [
                 { "dataExtension": "" },
+                { "dataExtensionPhoneNumberColumnName": "" },
                 { "templateName": "" },
                 { "phoneNumber": "" },
                 { "variables": "" }
@@ -60,8 +61,8 @@
     },
     "userInterfaces": {
         "configModal": {
-            "height": 450,
-            "width": 500,
+            "height": 540,
+            "width": 600,
             "fullscreen": false
         }
     },
@@ -71,6 +72,11 @@
                 "inArguments": [
                     {
                         "dataExtension": {
+                            "dataType": "Text",
+                            "isNullable": true,
+                            "direction": "in"
+                        },
+                        "dataExtensionPhoneNumberColumnName": {
                             "dataType": "Text",
                             "isNullable": true,
                             "direction": "in"

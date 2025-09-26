@@ -33,13 +33,13 @@ define(['postmonger'], (Postmonger) => {
         const dataExtensionArg = inArguments.find(arg => arg.dataExtension);
         if (dataExtensionArg) document.getElementById('dataExtension').value = dataExtensionArg.dataExtension;
 
+        const dataExtensionPhoneNumberColumnNameArg = inArguments.find(arg => arg.dataExtensionPhoneNumberColumnName);
+        if (dataExtensionPhoneNumberColumnNameArg) document.getElementById('dataExtensionPhoneNumberColumnName').value = dataExtensionPhoneNumberColumnNameArg.dataExtensionPhoneNumberColumnName;
+
         const templateNameArg = inArguments.find(arg => arg.templateName);
         if (templateNameArg) document.getElementById('templateName').value = templateNameArg.templateName;
 
-        const phoneNumberArg = inArguments.find(arg => arg.phoneNumber);
-        if (phoneNumberArg) document.getElementById('phoneNumber').value = phoneNumberArg.phoneNumber;
-
-        const variablesArg = inArguments.find(arg => arg.fields);
+        const variablesArg = inArguments.find(arg => arg.variables);
         if (variablesArg) {
             const parsedVariables = deserializeString(variablesArg.variables);
             for (const parsedVariable in parsedVariables) {
@@ -53,8 +53,9 @@ define(['postmonger'], (Postmonger) => {
 
     connection.on('clickedNext', () => { // Save function within MC.
         const dataExtension = document.getElementById('dataExtension').value;
+        const dataExtensionPhoneNumberColumnNameArg = document.getElementById('dataExtensionPhoneNumberColumnName').value;
         const templateName = document.getElementById('templateName').value;
-        const phoneNumber = `{{Contact.Attribute."${dataExtension}".phoneNumber}}`;
+        const phoneNumber = `{{Contact.Attribute."${dataExtension}".${dataExtensionPhoneNumberColumnNameArg}}}`;
 
         const groupDivs = document.querySelectorAll('.variable-item');
         const variablesObject = {};
@@ -72,6 +73,7 @@ define(['postmonger'], (Postmonger) => {
 
         activity['arguments'].execute.inArguments = [
             { dataExtension: dataExtension ? dataExtension : null },
+            { dataExtensionPhoneNumberColumnNameArg: dataExtensionPhoneNumberColumnNameArg ? dataExtensionPhoneNumberColumnNameArg : null },
             { templateName: templateName ? templateName : null },
             { phoneNumber: phoneNumber ? phoneNumber : null },
             { variables: variables ? variables : null },

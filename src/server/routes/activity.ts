@@ -112,7 +112,7 @@ const execute = async function (req: Request, res: Response) {
                     console.log('UNPARSED VARIABLES:', variables);
 
                     const parsedVariables = deserializeString(variables);
-                    console.log('PARSED VARIABLES:', variables);
+                    console.log('PARSED VARIABLES:', parsedVariables);
 
                     const variablesNumber = Object.keys(parsedVariables).length;
                     if (variablesNumber) {
@@ -148,7 +148,10 @@ const execute = async function (req: Request, res: Response) {
                         data: body,
                     })
                         .then((res) => {
-                            if (res.status === 201) return { success: true };
+                            if (res.status === 201) {
+                                console.log(`Success for ${phoneNumber}`);
+                                return { success: true };
+                            }
                             else return { success: false };
                         })
                         .catch((err) => {
