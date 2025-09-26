@@ -111,7 +111,7 @@ const execute = async function (req: Request, res: Response) {
                     console.log('PHONE NUMBER:', phoneNumber);
                     console.log('UNPARSED VARIABLES:', variables);
 
-                    const body: {
+                    const requestJsonBody: {
                         campaign: null;
                         channelId: string;
                         name: string;
@@ -137,27 +137,41 @@ const execute = async function (req: Request, res: Response) {
                             for (const [key, value] of Object.entries(parsedVariables)) {
                                 if (!value) return res.status(400).send(`Value for variable "${key}" is invalid: ${value}.`);
                             }
-                            body.contacts[0].variables = parsedVariables;
+                            requestJsonBody.contacts[0].variables = parsedVariables;
                         }
                     }
 
-                    const result: {
-                        success: boolean,
-                    } = await axios.post(`${API_BASE_URL}/notifications`, {
-                        headers: { 'access-token': ACCESS_TOKEN },
-                        data: body,
-                    })
-                        .then((res) => {
-                            if (res.status === 201) {
-                                console.log(`Success for ${phoneNumber}`);
-                                return { success: true };
-                            }
-                            else return { success: false };
-                        })
-                        .catch((err) => {
-                            specialConsoleLog('DATA_REQUEST_FAILED', err.response);
-                            return { success: false };
-                        });
+                    let result: { success: boolean };
+                    
+                    console.log('NOTIFICATION_REQUEST_BODY:');
+                    console.dir(requestJsonBody, { depth: null });
+                    try {
+                        const { data, status } = await axios.post(
+                            `${API_BASE_URL}/notifications`,
+                            requestJsonBody,
+                            { headers: { 'access-token': ACCESS_TOKEN } },
+                        );
+                        if (status === 201) {
+                            console.log(`Success for ${phoneNumber}`);
+                            result = { success: true };
+                        } else {
+                            console.warn('NOTIFICATION_REQUEST_DID_NOT_SUCCEED', { ...data, statusCode: status });
+                            result = { success: false };
+                        }
+                    } catch (err: any) {
+                        if (err.response) {
+                            console.error('NOTIFICATION_REQUEST_FAILED - Server error', {
+                                status: err.response.status,
+                                data: err.response.data,
+                            });
+                            console.dir(err.response.data, { depth: null });
+                        } else if (err.request) {
+                            console.error('NOTIFICATION_REQUEST_FAILED - No response received', err.request);
+                        } else {
+                            console.error('NOTIFICATION_REQUEST_FAILED - Unexpected error', err.message);
+                        }
+                        result = { success: false };
+                    }
 
                     return res.send(result);
                 } else {
