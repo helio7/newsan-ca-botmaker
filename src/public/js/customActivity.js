@@ -69,7 +69,7 @@ define(['postmonger'], (Postmonger) => {
             }
             variablesObject[variableName] = `{{Contact.Attribute."${dataExtension}".${dataExtensionColumnName}}}`;
         }
-        const variables = serializeObject(variablesObject);
+        const variables = groupDivs.length ? serializeObject(variablesObject) : 'NO_VARIABLES';
 
         activity['arguments'].execute.inArguments = [
             { dataExtension: dataExtension ? dataExtension : null },

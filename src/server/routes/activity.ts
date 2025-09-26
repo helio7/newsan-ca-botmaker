@@ -111,17 +111,6 @@ const execute = async function (req: Request, res: Response) {
                     console.log('PHONE NUMBER:', phoneNumber);
                     console.log('UNPARSED VARIABLES:', variables);
 
-                    const parsedVariables = deserializeString(variables);
-                    console.log('PARSED VARIABLES:', parsedVariables);
-
-                    const variablesNumber = Object.keys(parsedVariables).length;
-                    if (variablesNumber) {
-                        // Check for null, undefined, or empty string values in parsedVariables
-                        for (const [key, value] of Object.entries(parsedVariables)) {
-                            if (!value) return res.status(400).send(`Value for variable "${key}" is invalid: ${value}.`);
-                        }
-                    }
-
                     const body: {
                         campaign: null;
                         channelId: string;
@@ -139,7 +128,18 @@ const execute = async function (req: Request, res: Response) {
                         contacts: [{ contactId: phoneNumber }],
                     };
 
-                    if (variablesNumber) body.contacts[0].variables = parsedVariables;
+                    if (variables !== 'NO_VARIABLES') {
+                        const parsedVariables = deserializeString(variables);
+                        console.log('PARSED VARIABLES:', parsedVariables);
+                        const variablesNumber = Object.keys(parsedVariables).length;
+                        if (variablesNumber) {
+                            // Check for null, undefined, or empty string values in parsedVariables
+                            for (const [key, value] of Object.entries(parsedVariables)) {
+                                if (!value) return res.status(400).send(`Value for variable "${key}" is invalid: ${value}.`);
+                            }
+                            body.contacts[0].variables = parsedVariables;
+                        }
+                    }
 
                     const result: {
                         success: boolean,
